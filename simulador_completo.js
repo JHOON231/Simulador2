@@ -14,7 +14,7 @@
     document.getElementById("parametros").classList.remove("activa");
     document.getElementById("clientes").classList.remove("activa");
     document.getElementById("credito").classList.remove("activa");
-
+    document.getElementById("listaCreditos").classList.remove("activa");
 }
 
 function mostrarSeccion(id){
@@ -95,6 +95,7 @@ function pintarClientes(){
     }
     tabla.innerHTML = contenido;
 }
+
 function buscarCliente(cedula){
     for(let i = 0; i < clientes.length; i++){
         if(clientes[i].cedula == cedula){
@@ -126,6 +127,23 @@ function limpiar(){
 }
 
 //parametros
+function buscarCreditos(cedula){
+
+    let creditosEncontrados = [];
+
+    for(let i = 0; i < creditos.length; i++){
+
+        if(creditos[i].cedula == cedula){
+
+            creditosEncontrados.push(creditos[i]);
+
+        }
+
+    }
+
+    return creditosEncontrados;
+
+}
 
 function buscarClienteCredito(){
     let cedula;
@@ -134,6 +152,7 @@ function buscarClienteCredito(){
     let cliente;
     cliente = buscarCliente(cedula);
     if(cliente != null){
+        clienteSeleccionado = cliente;
         document.getElementById("datosClienteCredito").innerHTML = `
         <h3>Datos del Cliente</h3>
         <p><strong>Cédula:</strong> ${cliente.cedula}</p>
@@ -201,9 +220,12 @@ function calcularCredito(){
     let cuotaMensual;
 
     cuotaMensual = calcularCuotaMesual(
-        totalPagar,
-        plazo
+    totalPagar,
+    plazo
     );
+    cuotaCalculada = cuotaMensual;
+    montoCalculado = monto;
+    plazoCalculado = plazo;
 
     let resultado;
 
@@ -230,10 +252,60 @@ function calcularCredito(){
 
     if(resultado == "CREDITO APROBADO"){
     resultadoDiv.className = "aprobado";
+    document.getElementById("btnSolicitarCredito").disabled = false
     }
     else{
     resultadoDiv.className = "rechazado";
+     document.getElementById("btnSolicitarCredito").disabled = true;
+    }
 }
+
+function solicitarCredito(){
+    let credito = {
+    cedula: clienteSeleccionado.cedula,
+    nombre: clienteSeleccionado.nombre,
+    apellido: clienteSeleccionado.apellido,
+    monto: montoCalculado,
+    tasa: tasaInteres,
+    plazo: plazoCalculado,
+    cuota: cuotaCalculada
+};
+    creditos.push(credito);
+    console.log(creditos);
+}
+
+function buscarCreditosCliente(){
+    let cedula;
+    cedula = recuperaraTexto("buscarCedulaListado");
+    let creditosCliente;
+    creditosCliente = buscarCreditos(cedula);
+    pintarCreditos(creditosCliente);
+}
+
+function pintarCreditos(arregloCreditos){
+    let tabla;
+    tabla = document.getElementById("tablaCreditos");
+    let contenido = "";
+    for(let i = 0; i < arregloCreditos.length; i++){
+
+        contenido += "<tr>";
+        contenido += "<td>" + arregloCreditos[i].cedula + "</td>";
+        contenido += "<td>" + arregloCreditos[i].nombre + "</td>";
+        contenido += "<td>" + arregloCreditos[i].apellido + "</td>";
+        contenido += "<td>" + arregloCreditos[i].monto + "</td>";
+        contenido += "<td>" + arregloCreditos[i].tasa + "</td>";
+        contenido += "<td>" + arregloCreditos[i].plazo + "</td>";
+        contenido += "<td>" + arregloCreditos[i].cuota + "</td>";
+        contenido += `
+        <td>
+            <button onclick="eliminarCredito(${i})">
+                Eliminar
+            </button>
+        </td>
+        `;
+        contenido += "</tr>";
+    }
+    tabla.innerHTML = contenido;
 }
 
 //Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios
