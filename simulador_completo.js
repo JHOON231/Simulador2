@@ -277,6 +277,7 @@ function solicitarCredito(){
 function buscarCreditosCliente(){
     let cedula;
     cedula = recuperaraTexto("buscarCedulaListado");
+    ultimoFiltroCedula = cedula;
     let creditosCliente;
     creditosCliente = buscarCreditos(cedula);
     pintarCreditos(creditosCliente);
@@ -307,5 +308,51 @@ function pintarCreditos(arregloCreditos){
     }
     tabla.innerHTML = contenido;
 }
+
+if(tasa >= 10 && tasa <= 20){
+
+    tasaInteres = tasa;
+
+    mostrarTexto(
+        "mensajeTasa",
+        "Tasa configurada correctamente: " + tasa + "%"
+    );
+}
+
+function eliminarCredito(indice){
+    let credito = creditosMostrados[indice];
+    if(!credito){
+        return;
+    }
+
+    let posicionGlobal = creditos.indexOf(credito);
+    if(posicionGlobal >= 0){
+        creditos.splice(posicionGlobal, 1);
+    }
+
+    if(ultimoFiltroCedula){
+        buscarCreditosCliente();
+    } else {
+        pintarCreditos(creditos);
+    }
+}
+
+function eliminarCredito(indice){
+    let credito = creditosMostrados[indice];
+    if(!credito){
+        return;
+    }
+    let posicionGlobal = creditos.indexOf(credito);
+    if(posicionGlobal >= 0){
+        creditos.splice(posicionGlobal, 1);
+    }
+    if(ultimoFiltroCedula){
+        buscarCreditosCliente();
+    }
+    else{
+        pintarCreditos(creditos);
+    }
+}
+
 
 //Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios
