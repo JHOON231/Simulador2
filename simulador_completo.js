@@ -3,6 +3,8 @@
   let creditos = [];
 
   let tasaInteres = 15;
+  let montoMaximo = 5000;//
+  let esVip = false;//
   let clienteSeleccionado = null;
   let cuotaCalculada = 0;
   let montoCalculado = 0;
@@ -26,6 +28,7 @@ function guardarTasa(){
     let tasa;
 
     tasa = recuperarInt("tasaInteres");
+    montoMaximo = recuperarFloat("montoMaximo");//
     if(tasa >= 10 && tasa <= 20){
         mostrarTexto(
             "mensajeTasa",
@@ -44,18 +47,22 @@ function guardarCliente(){
     let cedula;
     let nombre;
     let apellido;
+    let telefono;
     let ingresos;
     let egresos;
 
     cedula = recuperaraTexto("txtCedula");
     nombre = recuperaraTexto("txtNombre");
     apellido = recuperaraTexto("txtApellido");
+    telefono = recuperaraTexto("txtTelefono");
     ingresos = recuperarFloat("txtIngresos");
     egresos = recuperarFloat("txtEgresos");
     let cliente = {
         cedula: cedula,
         nombre: nombre,
         apellido: apellido,
+        apellido: apellido,
+        ingresos: ingresos,
         ingresos: ingresos,
         egresos: egresos
     };
@@ -65,6 +72,7 @@ function guardarCliente(){
     else{
         clienteSeleccionado.nombre = nombre;
         clienteSeleccionado.apellido = apellido;
+        clienteSeleccionado.telefono = telefono;
         clienteSeleccionado.ingresos = ingresos;
         clienteSeleccionado.egresos = egresos;
         clienteSeleccionado = null;
@@ -82,6 +90,7 @@ function pintarClientes(){
         contenido += "<td>" + clientes[i].cedula + "</td>";
         contenido += "<td>" + clientes[i].nombre + "</td>";
         contenido += "<td>" + clientes[i].apellido + "</td>";
+        contenido += "<td>" + clientes[i].telefono + "</td>";
         contenido += "<td>" + clientes[i].ingresos + "</td>";
         contenido += "<td>" + clientes[i].egresos + "</td>";
         contenido += `
@@ -113,6 +122,7 @@ function seleccionarCliente(cedula){
     mostrarTextoEnCaja("txtCedula", cliente.cedula);
     mostrarTextoEnCaja("txtNombre", cliente.nombre);
     mostrarTextoEnCaja("txtApellido", cliente.apellido);
+    mostrarTextoEnCaja("txtTelefono", cliente.telefono);
     mostrarTextoEnCaja("txtIngresos", cliente.ingresos);
     mostrarTextoEnCaja("txtEgresos", cliente.egresos);
 }
@@ -121,12 +131,13 @@ function limpiar(){
     mostrarTextoEnCaja("txtCedula","");
     mostrarTextoEnCaja("txtNombre","");
     mostrarTextoEnCaja("txtApellido","");
+    mostrarTextoEnCaja("txtTelefono","");////
     mostrarTextoEnCaja("txtIngresos","");
     mostrarTextoEnCaja("txtEgresos","");
     clienteSeleccionado = null;
 }
 
-//parametros
+
 function buscarCreditos(cedula){
 
     let creditosEncontrados = [];
@@ -176,18 +187,31 @@ function calcularCredito(){
     cedula = recuperaraTexto("buscarCedulaCredito");
 
     cliente = buscarCliente(cedula);
+    esVip = false;
+    
+    if(cliente.ingresos > 3000){////
+        esVip = true;
+    }
     let monto;
     let plazo;
+    monto = recuperarFloat("montoCredito");
     if(cliente == null){
 
     document.getElementById("resultadoCredito").innerHTML = `
-    Cliente no encontrado
-    `;
-
+    Cliente no encontrado`;
     return;
 }
 
-    monto = recuperarFloat("montoCredito");
+    let limite = montoMaximo;////
+    if(esVip){
+        limite = montoMaximo * 2;
+    }
+
+    if(monto > limite){
+        document.getElementById("resultadoCredito").innerHTML = `
+        El monto supera el máximo permitido`;
+        return;
+    }
 
     plazo = recuperarFloat("plazoCredito");
 
@@ -309,16 +333,6 @@ function pintarCreditos(arregloCreditos){
     tabla.innerHTML = contenido;
 }
 
-if(tasa >= 10 && tasa <= 20){
-
-    tasaInteres = tasa;
-
-    mostrarTexto(
-        "mensajeTasa",
-        "Tasa configurada correctamente: " + tasa + "%"
-    );
-}
-
 function eliminarCredito(indice){
     let credito = creditosMostrados[indice];
     if(!credito){
@@ -337,22 +351,7 @@ function eliminarCredito(indice){
     }
 }
 
-function eliminarCredito(indice){
-    let credito = creditosMostrados[indice];
-    if(!credito){
-        return;
-    }
-    let posicionGlobal = creditos.indexOf(credito);
-    if(posicionGlobal >= 0){
-        creditos.splice(posicionGlobal, 1);
-    }
-    if(ultimoFiltroCedula){
-        buscarCreditosCliente();
-    }
-    else{
-        pintarCreditos(creditos);
-    }
-}
+
 
 
 //Para recuperar o mostrar información usar los métodos de la clase utilitarios, puede agregar métodos adicionales en utilitarios

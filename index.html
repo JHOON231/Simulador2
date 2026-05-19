@@ -17,6 +17,7 @@
   <button onclick="mostrarSeccion('clientes')">Clientes</button>
   <button onclick="mostrarSeccion('credito')">Créditos</button>
   <button onclick="mostrarSeccion('listaCreditos')">Créditos Registrados</button>
+  <button onclick="mostrarSeccion('acerca')">Acerca de</button>
 </nav>
 </nav>
 
@@ -32,6 +33,14 @@ max="20"
 value="15">
   <span>%</span>
 
+  <br><br>
+<label>Monto máximo:</label>
+<input
+type="number"
+id="montoMaximo"
+value="5000">
+<span>$</span>
+
   <br>
   <button onclick="guardarTasa()">Guardar tasa</button>
 
@@ -44,6 +53,7 @@ value="15">
   <input type="text" id="txtCedula" placeholder="Cédula">
   <input type="text" id="txtNombre" placeholder="Nombre">
   <input type="text" id="txtApellido" placeholder="Apellido">
+  <input type="text" id="txtTelefono" placeholder="Teléfono">
   <input type="number" id="txtIngresos" placeholder="Ingresos">
   <input type="number" id="txtEgresos" placeholder="Egresos">
 
@@ -58,6 +68,7 @@ value="15">
         <th>Cédula</th>
         <th>Nombre</th>
         <th>Apellido</th>
+        <th>Teléfono</th>
         <th>Ingresos</th>
         <th>Egresos</th>
         <th>Acciones</th>
@@ -177,6 +188,28 @@ value="15">
         </tr>
     </tbody>
   </table>
+</section>
+
+<section id="acerca">
+
+  <h2>Acerca del desarrollador</h2>
+
+  <div class="card">
+    <h3>Jhon Quintero</h3>
+    <p>
+      Soy un estudiante de desarrollo de software.
+    </p>
+    <p>
+      Me gusta programar, el diseño de interfaces
+      y crear aplicaciones con JavaScript.
+    </p>
+    <p>
+       “Me gusta ir aprendiendo nuevas cosas”
+    </p>
+    <p>
+      Instagram: jhon_ty0d
+    </p>
+  </div>
 </section>
 
 
